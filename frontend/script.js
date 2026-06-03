@@ -4,6 +4,8 @@ const sendButton = document.getElementById("send-btn");
 
 const API_URL = "http://127.0.0.1:8000/chat";
 
+let chatHistory = [];
+
 sendButton.addEventListener("click", sendMessage);
 
 userInput.addEventListener("keydown", function (event) {
@@ -32,7 +34,8 @@ async function sendMessage() {
         "Content-Type": "application/json"
         },
         body: JSON.stringify({
-        message: message
+        message: message,
+        history: chatHistory
         })
     });
 
@@ -43,6 +46,16 @@ async function sendMessage() {
     const data = await response.json();
 
     addMessage(data.answer, "bot-message");
+
+    chatHistory.push({
+        role: "user",
+        content: message
+    });
+
+    chatHistory.push({
+        role: "assistant",
+        content: data.answer
+    });
     } catch (error) {
     addMessage(
         "Sorry, something went wrong. Make sure your backend is running.",

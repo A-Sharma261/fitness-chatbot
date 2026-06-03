@@ -24,5 +24,5 @@ def home():
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    answer = get_fitness_response(request.message)
+    answer = get_fitness_response(request.message, request.history)
     return ChatResponse(answer=answer)

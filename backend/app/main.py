@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.schemas import ChatRequest, ChatResponse
 from app.chatbot import get_fitness_response
+from app.safety import is_risky_message, get_safety_response
 
 
 app = FastAPI(title="Fitness Chatbot API")
@@ -24,5 +25,8 @@ def home():
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
+    if is_risky_message(request.message):
+        return ChatResponse(answer=get_safety_response())
+
     answer = get_fitness_response(request.message, request.history)
     return ChatResponse(answer=answer)

@@ -34,9 +34,16 @@ Current user question:
 {user_message}
 """
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash-lite",
-        contents=prompt
-    )
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.5-flash-lite",
+            contents=prompt
+        )
 
-    return response.text
+        return response.text
+
+    except Exception:
+        return (
+            "Sorry, I had trouble generating a response. "
+            "Please try again in a moment."
+        )
